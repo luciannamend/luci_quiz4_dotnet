@@ -28,6 +28,9 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+- script: |
+    echo "##vso[task.setvariable variable=NUGET_ENABLE_LEGACY_CSPROJ_PACK]true"
+  displayName: 'Enable legacy NuGet pack'
 
 - task: NuGetCommand@2
   inputs:
