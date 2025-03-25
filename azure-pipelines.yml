@@ -28,15 +28,20 @@ steps:
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
 
+
+# ✅ Fix: Specify output directory for .nupkg files
 - task: DotNetCoreCLI@2
   inputs:
     command: 'pack'
     projects: '**/*.csproj'
     configuration: 'Release'
-    
+    arguments: '--output $(Build.ArtifactStagingDirectory)'
+
+# ✅ Fix: Ensure .nupkg files exist before pushing
 - task: NuGetCommand@2
   inputs:
     command: 'push'
-    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg;!$(Build.ArtifactStagingDirectory)/**/*.symbols.nupkg'
+    packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
     nuGetFeedType: 'internal'
     publishVstsFeed: '8652216f-33ec-4cc4-912f-2fdda6d93168/ec7dd365-d6f2-4c11-a4e2-b5de5e9034c0'
+
