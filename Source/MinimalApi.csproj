@@ -3,6 +3,7 @@
 	<PropertyGroup>
 		<TargetFramework>net8.0</TargetFramework>
 		<IsPackable>true</IsPackable>  <!-- ✅ Add this line -->
+                <PackageId>MyCustomPackageDemoMinimalApi</PackageId>  <!-- ✅ Custom Package Name -->
 		<Nullable>enable</Nullable>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<UserSecretsId>c863d8a7-6953-45aa-baa6-3b932debfdd0</UserSecretsId>
