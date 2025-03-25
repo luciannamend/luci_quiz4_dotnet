@@ -40,7 +40,7 @@ steps:
     command: 'pack'
     projects: '**/*.csproj'
     configuration: 'Release'
-    arguments: '--output $(Build.ArtifactStagingDirectory)'
+    arguments: '--output $(Build.ArtifactStagingDirectory) --property:PackageId=MyCustomDemoMinimalApi'
 
 # ✅ Fix: Ensure .nupkg files exist before pushing
 - task: NuGetCommand@2
