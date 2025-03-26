@@ -35,30 +35,25 @@ steps:
     msbuildArgs: '/p:DeployOnBuild=true /p:WebPublishMethod=Package /p:PackageAsSingleFile=true /p:SkipInvalidConfigurations=true /p:PackageLocation="$(build.artifactStagingDirectory)"'
     platform: '$(buildPlatform)'
     configuration: '$(buildConfiguration)'
-    
+
 - powershell: |
-    # Ensure the build output exists
-    $packagePath = "$(Build.ArtifactStagingDirectory)\*.nupkg"
-    $packageFile = Get-ChildItem -Path $packagePath | Select-Object -First 1
-    
-    if ($packageFile -eq $null) {
-        Write-Host "No .nupkg file found in $(Build.ArtifactStagingDirectory)"
-        exit 1  # Fail the pipeline if no package is found
-    }
+    [xml]$csproj = Get-Content "Source/MinimalApi.csproj"
+    $packageId = $csproj.Project.PropertyGroup.PackageId
+    $packageVersion = $csproj.Project.PropertyGroup.Version
 
-    # Extract package name and version
-    $packageName = $packageFile.BaseName -replace '\.\d+\.\d+\.\d+.*$', ''
-    $packageVersion = $packageFile.BaseName -replace '^.*\.(\d+\.\d+\.\d+.*)$', '$1'
+    if (-not $packageVersion) { $packageVersion = "1.0.0.$(Build.BuildId)" }  # Fallback version
+    if (-not $packageId) { $packageId = "DefaultPackageName" }  # Fallback name
 
-    # Print extracted values
-    Write-Host "Package File: $packageFile"
-    Write-Host "Extracted Package Name: $packageName"
-    Write-Host "Extracted Package Version: $packageVersion"
+    $artifactFullName = "$packageId" + "_" + "$packageVersion"
 
-    # Set pipeline variables
-    Write-Host "##vso[task.setvariable variable=artifactFullName]$packageName`_$packageVersion"
-  displayName: 'Extract Artifact Name & Version from .nupkg'
-  
+    Write-Host "Package ID: $packageId"
+    Write-Host "Package Version: $packageVersion"
+    Write-Host "Artifact Name: $artifactFullName"
+
+    # Set variables for later steps
+    Write-Host "##vso[task.setvariable variable=artifactFullName]$artifactFullName"
+  displayName: 'Extract & Print Artifact Name and Version'
+
     
 - task: PublishSymbols@2
   displayName: Publish symbols path
