@@ -13,6 +13,7 @@ variables:
   solution: '**/*.sln'
   buildPlatform: 'Any CPU'
   buildConfiguration: 'Release'
+  version: '1.0.0.$(Build.BuildId)'  # ✅ Auto-increment with Build ID
 
 steps:
 - task: NuGetToolInstaller@1
@@ -57,7 +58,7 @@ steps:
     command: 'pack'
     projects: '**/*.csproj'
     configuration: 'Release'
-    arguments: '--output $(Build.ArtifactStagingDirectory) '
+    arguments: '--output $(Build.ArtifactStagingDirectory) --property:Version=$(version)'
 
 # ✅ Fix: Ensure .nupkg files exist before pushing
 - task: NuGetCommand@2
