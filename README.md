@@ -4,6 +4,20 @@ ASP.NET Core 8.0 - Minimal API Example - Todo API implementation using ASP.NET C
 
 [![Build and Deployment](https://github.com/anuraj/MinimalApi/actions/workflows/main.yml/badge.svg)](https://github.com/anuraj/MinimalApi/actions/workflows/main.yml)
 
+## run Azure devops pipeline on this ASP.NET core repo
+* using the file aure-pipelines.yml
+* run the azure pipeline success.
+![azure pipeline run progress screenshot](./images/azure_pipeline_dotnetcore_run_process.jpg?raw=true)
+
+* verified the artifacts published success in pipeline
+![azure pipeline run progress screenshot](./images/azure_pipeline_dotnetcore_artifact_in_pipeline.jpg?raw=true)
+
+* verified the nuget package pushed success to the feeds.
+![azure pipeline run progress screenshot](./images/azure_pipeline_dotnetcore_artifact_feeds.jpg?raw=true)
+
+
+
+
 ## Features
 ### November 17, 2023
 * Upgraded to .NET 8
@@ -24,7 +38,7 @@ ASP.NET Core 8.0 - Minimal API Example - Todo API implementation using ASP.NET C
 * Modified authentication code to support `dotnet user-jwts`. Removed the `token` endpoint
 * How to create token using `dotnet user-jwts`.
 	* If the dotnet tool not exist, you may need to install it first.
-	* Execute the command - `dotnet user-jwts create --claim Username=user1 --claim Email=user1@example.com --name user1`. 
+	* Execute the command - `dotnet user-jwts create --claim Username=user1 --claim Email=user1@example.com --name user1`.
 	* This will generate a token and you can use this token in the Swagger / Open API.
 
 You can find more details here - [Manage JSON Web Tokens in development with dotnet user-jwts](https://learn.microsoft.com/en-us/aspnet/core/security/authentication/jwt-authn?view=aspnetcore-7.0&tabs=windows&WT.mc_id=DT-MVP-5002040)
@@ -64,11 +78,11 @@ You can find more details here - [Manage JSON Web Tokens in development with dot
 	- Query
 	- Mutation
 	- Subscription
-	
+
 ### November 11, 2021
 * CRUD operations using Minimal API .NET 6.0 and Sql Server
 * Health Checks implementation for Minimal APIs
 * Open API - Support for Tags
-* EF Core new features 
+* EF Core new features
 	- Temporal Tables in Sql Server
 	- Run migration using EF Bundles
