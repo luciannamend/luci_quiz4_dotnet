@@ -28,9 +28,23 @@ steps:
     command: 'restore'
     projects: '**/*.csproj'
 
-- script: |
-    echo "##vso[task.setvariable variable=artifactName]$(dotnet list package --format json | jq -r '.installed[0].id')"
-  displayName: 'Extract Artifact Name from dotnet list package'
+- powershell: |
+    [xml]$csproj = Get-Content "path/to/project.csproj"
+    $packageId = $csproj.Project.PropertyGroup.PackageId
+    $packageVersion = $csproj.Project.PropertyGroup.Version
+
+    if (-not $packageVersion) { $packageVersion = "1.0.0.$(Build.BuildId)" }  # Fallback version
+    if (-not $packageId) { $packageId = "DefaultPackageName" }  # Fallback name
+
+    $artifactFullName = "$packageId" + "_" + "$packageVersion"
+
+    Write-Host "Package ID: $packageId"
+    Write-Host "Package Version: $packageVersion"
+    Write-Host "Artifact Name: $artifactFullName"
+
+    # Set variables for later steps
+    Write-Host "##vso[task.setvariable variable=artifactFullName]$artifactFullName"
+  displayName: 'Extract & Print Artifact Name and Version'
 
 - task: VSBuild@1
   inputs:
@@ -52,9 +66,9 @@ steps:
   displayName: Publish Artifact
   condition: succeededOrFailed()
   inputs:
-    PathtoPublish: $(build.artifactstagingdirectory)
-    ArtifactName: $(artifactName)
-    TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)'
+    PathtoPublish: $(Build.ArtifactStagingDirectory)
+    ArtifactName: $(artifactFullName)  # ✅ Includes version
+    TargetPath: '\\my\share\$(Build.DefinitionName)\$(Build.BuildNumber)_$(artifactFullName)'  # ✅ Versioned target path
     
 
 # ✅ Fix: Specify output directory for .nupkg files
