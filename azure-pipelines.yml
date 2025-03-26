@@ -23,10 +23,15 @@ steps:
     restoreSolution: '$(solution)'
 
 - task: DotNetCoreCLI@2
+  displayName: Dotnet restore
   inputs:
     command: 'restore'
     projects: '**/*.csproj'
-    
+
+- script: |
+    echo "##vso[task.setvariable variable=artifactName]$(dotnet list package --format json | jq -r '.installed[0].id')"
+  displayName: 'Extract Artifact Name from dotnet list package'
+
 - task: VSBuild@1
   inputs:
     solution: '$(solution)'
@@ -54,6 +59,7 @@ steps:
 
 # ✅ Fix: Specify output directory for .nupkg files
 - task: DotNetCoreCLI@2
+  displayName: Dotnet Package
   inputs:
     command: 'pack'
     projects: '**/*.csproj'
@@ -62,6 +68,7 @@ steps:
 
 # ✅ Fix: Ensure .nupkg files exist before pushing
 - task: NuGetCommand@2
+  displayName: Push the nuget package to Feeds
   inputs:
     command: 'push'
     packagesToPush: '$(Build.ArtifactStagingDirectory)/**/*.nupkg'
