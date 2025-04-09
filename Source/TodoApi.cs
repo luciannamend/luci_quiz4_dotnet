@@ -1,3 +1,5 @@
+//Database migration has already been done on April 9, 2025 by Lucianna Mendonca.
+
 using Microsoft.AspNetCore.Mvc;
 
 namespace MinimalApi;
